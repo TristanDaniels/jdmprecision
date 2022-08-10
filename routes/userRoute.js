@@ -154,7 +154,7 @@ router.post("/login", (req, res) => {
   try {
     let sql = "SELECT * FROM users WHERE ?";
     let user = {
-      fullname: req.body.fullname,
+      email: req.body.email,
     };
     con.query(sql, user, async (err, result) => {
       if (err) throw err;
