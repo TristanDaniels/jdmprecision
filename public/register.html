@@ -33,7 +33,7 @@
         </div>
         <div class="mb-3">
           <label for="userpassword" class="form-label">Password</label>
-          <input type="userpassword" class="form-control" id="userpassword" />
+          <input type="password" class="form-control" id="userpassword" />
         </div>
         <div class="mb-3">
           <label for="userRole" class="form-label">User role</label>
@@ -45,7 +45,11 @@
         </div>
         <div class="mb-3">
           <label for="joinDate" class="form-label">Join date</label>
-          <input type="joinDate" class="form-control" id="joinDate" />
+          <input type="date" class="form-control" id="joinDate" />
+        </div>
+        <div class="mb-3">
+          <label for="cart" class="form-label">Cart</label>
+          <input type="cart" class="form-control" id="cart" />
         </div>
         <div class="mb-3 btn-container d-flex justify-content-center"></div>
         <button type="submit" class="btn btn-primary mb-3">Sign up</button>
@@ -67,7 +71,7 @@
         let joinDate = document.getElementById("joinDate").value;
         let cart = document.getElementById("cart").value;
 
-        fetch("http://localhost:6969/users/register", {
+        fetch("http://localhost:6969/users/register.html", {
           method: "POST",
           body: JSON.stringify({
             fullname: fullname,

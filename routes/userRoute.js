@@ -22,14 +22,13 @@ router.post("/", (req, res) => {
     email,
     userpassword,
     userRole,
-    cartnumber,
+    phonenumber,
     joinDate,
     cart,
-    user_type,
   } = req.body;
   try {
     con.query(
-      `insert into users (fullname,email,userpassword,userRole,cartnumber,joinDate,cart,user_type) values ('${fullname}', '${email}', '${userpassword}', '${userRole}', '${cartnumber}', '${joinDate}', '${cart}', '${user_type}') `,
+      `insert into users (fullname,email,userpassword,userRole,phonenumber,joinDate,cart) values ('${fullname}', '${email}', '${userpassword}', '${userRole}', '${phonenumber}', '${joinDate}', '${cart}') `,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -76,13 +75,13 @@ router.put("/:id", (req, res) => {
     email,
     userpassword,
     userRole,
-    cartnumber,
+    phonenumber,
     joinDate,
     cart,
   } = req.body;
   try {
     con.query(
-      `update users set fullname = "${fullname}",  email = "${email}", userpassword = "${userpassword}", userRole = "${userRole}", cartnumber = "${cartnumber}", joinDate = "${joinDate}", cart = "${cart}" where user_id = "${req.params.id}"`,
+      `update users set fullname = "${fullname}",  email = "${email}", userpassword = "${userpassword}", userRole = "${userRole}", phonenumber = "${phonenumber}", joinDate = "${joinDate}", cart = "${cart}" where user_id = "${req.params.id}"`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -133,7 +132,6 @@ router.post("/register", (req, res) => {
       fullname,
       // We sending the hash value to be stored witin the table
       email: hash,
-      user_type,
       cart,
       joinDate,
       userRole,
@@ -175,7 +173,6 @@ router.post("/login", (req, res) => {
               user_id: result[0].user_id,
               userpassword: result[0].userpassword,
               fullname: result[0].fullname,
-              user_type: result[0].user_type,
               cart: result[0].cart,
               joinDate: result[0].joinDate,
               userRole: result[0].userRole,
@@ -319,7 +316,6 @@ router.put("reset-psw/:id", (req, res) => {
       const updatedemail = {
         userpassword: result[0].userpassword,
         fullname: result[0].fullname,
-        user_type: result[0].user_type,
         cart: result[0].cart,
         joinDate: result[0].joinDate,
         userRole: result[0].userRole,
