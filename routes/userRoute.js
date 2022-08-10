@@ -42,7 +42,7 @@ router.post("/", (req, res) => {
 router.get("/:id", (req, res) => {
   try {
     con.query(
-      `SELECT * FROM users where user_id = ${req.params.id}`,
+      `SELECT * FROM users where id = ${req.params.id}`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -57,7 +57,7 @@ router.get("/:id", (req, res) => {
 router.delete("/:id", (req, res) => {
   try {
     con.query(
-      `delete from users where user_id = ${req.params.id}`,
+      `delete from users where id = ${req.params.id}`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -81,7 +81,7 @@ router.put("/:id", (req, res) => {
   } = req.body;
   try {
     con.query(
-      `update users set fullname = "${fullname}",  email = "${email}", userpassword = "${userpassword}", userRole = "${userRole}", phonenumber = "${phonenumber}", joinDate = "${joinDate}", cart = "${cart}" where user_id = "${req.params.id}"`,
+      `update users set fullname = "${fullname}",  email = "${email}", userpassword = "${userpassword}", userRole = "${userRole}", phonenumber = "${phonenumber}", joinDate = "${joinDate}", cart = "${cart}" where id = "${req.params.id}"`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -125,13 +125,13 @@ router.post("/register", (req, res) => {
     } = req.body;
     // The start of hashing / encryption
     const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(email, salt);
+    const hash = bcrypt.hashSync(userpassword, salt);
     //Database terms
     let user = {
-      userpassword,
+      userpassword: hash,
       fullname,
       // We sending the hash value to be stored witin the table
-      email: hash,
+      email,
       cart,
       joinDate,
       userRole,
@@ -142,9 +142,7 @@ router.post("/register", (req, res) => {
     con.query(sql, user, (err, result) => {
       if (err) throw err;
       console.log(result);
-      res.send(
-        `User ${(user.userpassword, user.fullname)} created successfully`
-      );
+      res.send(`User ${(user.fullname, user.email)} created successfully`);
     });
   } catch (error) {
     console.log(error);
@@ -161,16 +159,18 @@ router.post("/login", (req, res) => {
     con.query(sql, user, async (err, result) => {
       if (err) throw err;
       if (result.length === 0) {
-        res.send("fullname not found please register");
+        res.send("user not found please register");
       } else {
-        const isMatch = await bcrypt.compare(req.body.email, result[0].email);
+        const isMatch = await bcrypt.compare(
+          req.body.userpassword,
+          result[0].userpassword
+        );
         if (!isMatch) {
-          res.send("email incorrect");
+          res.send("password incorrect");
         } else {
           // The information the should be stored inside token
           const payload = {
             user: {
-              user_id: result[0].user_id,
               userpassword: result[0].userpassword,
               fullname: result[0].fullname,
               cart: result[0].cart,
@@ -259,7 +259,7 @@ router.post("/forgot-psw", (req, res) => {
 
             <a href="https://user-images.githubusercontent.com/4998145/52377595-605e4400-2a33-11e9-80f1-c9f61b163c6a.png">
               Click Here to Reset email
-              user_id = ${result[0].user_id}
+              id = ${result[0].id}
             </a>
 
             <br>
@@ -286,7 +286,7 @@ router.post("/forgot-psw", (req, res) => {
           if (error) {
             console.log(error);
           } else {
-            res.send("Please Check your fullname", result[0].user_id);
+            res.send("Please Check your fullname", result[0].id);
           }
         });
       }
@@ -301,19 +301,19 @@ router.post("/forgot-psw", (req, res) => {
 router.put("reset-psw/:id", (req, res) => {
   let sql = "SELECT * FROM users WHERE ?";
   let user = {
-    user_id: req.params.id,
+    id: req.params.id,
   };
   con.query(sql, user, (err, result) => {
     if (err) throw err;
     if (result === 0) {
       res.status(400), res.send("User not found");
     } else {
-      let newemail = `UPDATE users SET ? WHERE user_id = ${req.params.id}`;
+      let newuserpassword = `UPDATE users SET ? WHERE id = ${req.params.id}`;
 
       const salt = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(req.body.email, salt);
+      const hash = bcrypt.hashSync(req.body.userpassword, salt);
 
-      const updatedemail = {
+      const updateduserpassword = {
         userpassword: result[0].userpassword,
         fullname: result[0].fullname,
         cart: result[0].cart,
@@ -322,13 +322,13 @@ router.put("reset-psw/:id", (req, res) => {
         phonenumber: result[0].phonenumber,
 
         // Only thing im changing in table
-        email: hash,
+        userpassword: hash,
       };
 
-      con.query(newemail, updatedemail, (err, result) => {
+      con.query(newuserpassword, updateduserpassword, (err, result) => {
         if (err) throw err;
         console.log(result);
-        res.send("email Updated please login");
+        res.send("password updated please login again");
       });
     }
   });

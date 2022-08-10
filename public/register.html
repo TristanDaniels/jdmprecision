@@ -71,7 +71,7 @@
         let joinDate = document.getElementById("joinDate").value;
         let cart = document.getElementById("cart").value;
 
-        fetch("http://localhost:6969/users/register.html", {
+        fetch("http://localhost:6969/users/register", {
           method: "POST",
           body: JSON.stringify({
             fullname: fullname,
