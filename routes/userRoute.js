@@ -16,7 +16,7 @@ router.get("/", (req, res) => {
     res.status(400).send(error);
   }
 });
-router.post("/", (req, res) => {
+router.post("/", middleware, (req, res) => {
   const {
     fullname,
     email,
@@ -39,7 +39,7 @@ router.post("/", (req, res) => {
   }
 });
 //gets one user
-router.get("/:id", (req, res) => {
+router.get("/:id", middleware, (req, res) => {
   try {
     con.query(
       `SELECT * FROM users where id = ${req.params.id}`,
@@ -54,7 +54,7 @@ router.get("/:id", (req, res) => {
   }
 });
 //delete
-router.delete("/:id", (req, res) => {
+router.delete("/:id", middleware, (req, res) => {
   try {
     con.query(
       `delete from users where id = ${req.params.id}`,
@@ -69,7 +69,7 @@ router.delete("/:id", (req, res) => {
   }
 });
 //edit
-router.put("/:id", (req, res) => {
+router.put("/:id", middleware, (req, res) => {
   const {
     fullname,
     email,
@@ -92,7 +92,7 @@ router.put("/:id", (req, res) => {
     res.status(400).send(error);
   }
 });
-router.patch("/", (req, res) => {
+router.patch("/", middleware, (req, res) => {
   const { fullname, email } = req.body;
   try {
     con.query(
@@ -110,7 +110,7 @@ router.patch("/", (req, res) => {
 const bcrypt = require("bcryptjs");
 // Register Route
 // The Route where Encryption starts
-router.post("/register", (req, res) => {
+router.post("/register", middleware, (req, res) => {
   try {
     let sql = "INSERT INTO users SET ?";
     //This is the body im requesting

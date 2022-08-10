@@ -57,7 +57,7 @@ router.put("/:id", middleware, (req, res) => {
 });
 
 // Delete by id
-router.delete("/products/:id", (req, res) => {
+router.delete("/products/:id", middleware, (req, res) => {
   try {
     con.query(
       `DELETE FROM products WHERE id=${req.params.id}`,
