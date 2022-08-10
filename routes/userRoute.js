@@ -114,15 +114,8 @@ router.post("/register", (req, res) => {
   try {
     let sql = "INSERT INTO users SET ?";
     //This is the body im requesting
-    const {
-      userpassword,
-      fullname,
-      email,
-      cart,
-      joinDate,
-      userRole,
-      phonenumber,
-    } = req.body;
+    const { userpassword, fullname, email, joinDate, userRole, phonenumber } =
+      req.body;
     // The start of hashing / encryption
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(userpassword, salt);
@@ -132,7 +125,7 @@ router.post("/register", (req, res) => {
       fullname,
       // We sending the hash value to be stored witin the table
       email,
-      cart,
+      cart: "[]",
       joinDate,
       userRole,
       phonenumber,
@@ -171,9 +164,8 @@ router.post("/login", (req, res) => {
           // The information the should be stored inside token
           const payload = {
             user: {
-              userpassword: result[0].userpassword,
+              id: result[0].id,
               fullname: result[0].fullname,
-              cart: result[0].cart,
               joinDate: result[0].joinDate,
               userRole: result[0].userRole,
               phonenumber: result[0].phonenumber,
