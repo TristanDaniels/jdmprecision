@@ -114,8 +114,7 @@ router.post("/register", (req, res) => {
   try {
     let sql = "INSERT INTO users SET ?";
     //This is the body im requesting
-    const { userpassword, fullname, email, joinDate, userRole, phonenumber } =
-      req.body;
+    const { userpassword, fullname, email, joinDate, phonenumber } = req.body;
     // The start of hashing / encryption
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(userpassword, salt);
@@ -127,7 +126,7 @@ router.post("/register", (req, res) => {
       email,
       cart: "[]",
       joinDate,
-      userRole,
+      userRole: "user",
       phonenumber,
     };
     //SQL Query
