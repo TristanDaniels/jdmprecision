@@ -110,7 +110,7 @@ router.patch("/", middleware, (req, res) => {
 const bcrypt = require("bcryptjs");
 // Register Route
 // The Route where Encryption starts
-router.post("/register", middleware, (req, res) => {
+router.post("/register", (req, res) => {
   try {
     let sql = "INSERT INTO users SET ?";
     //This is the body im requesting
