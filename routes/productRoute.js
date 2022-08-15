@@ -14,7 +14,21 @@ router.get("/", (req, res) => {
     res.status(400).send(error);
   }
 });
-
+//gets one product
+router.get("/:id", middleware, (req, res) => {
+  try {
+    con.query(
+      `SELECT * FROM products where id = ${req.params.id}`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error);
+  }
+});
 // Add
 router.post("/", middleware, (req, res) => {
   console.log(req.user);
