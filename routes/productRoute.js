@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
   }
 });
 //gets one product
-router.get("/:id", middleware, (req, res) => {
+router.get("/:id", (req, res) => {
   try {
     con.query(
       `SELECT * FROM products where id = ${req.params.id}`,
